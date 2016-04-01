@@ -650,12 +650,14 @@ static int rtw_ndev_notifier_call(struct notifier_block * nb, unsigned long stat
 {
 	struct net_device *dev = ndev;
 
+#if 0
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,29))
 	if (dev->netdev_ops->ndo_do_ioctl != rtw_ioctl)
 #else
 	if (dev->do_ioctl != rtw_ioctl)
 #endif
 		return NOTIFY_DONE;
+#endif /* if 0 end*/
 
 	DBG_871X_LEVEL(_drv_info_, FUNC_NDEV_FMT" state:%lu\n", FUNC_NDEV_ARG(dev), state);
 

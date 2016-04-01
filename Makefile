@@ -39,7 +39,7 @@ CONFIG_SDIO_HCI = n
 CONFIG_GSPI_HCI = n
 ########################## Features ###########################
 CONFIG_MP_INCLUDED = y
-CONFIG_POWER_SAVING = y
+CONFIG_POWER_SAVING = n
 CONFIG_USB_AUTOSUSPEND = n
 CONFIG_HW_PWRP_DETECTION = n
 CONFIG_WIFI_TEST = n
@@ -63,7 +63,7 @@ CONFIG_AP_WOWLAN = n
 ######### Notify SDIO Host Keep Power During Syspend ##########
 CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ANDROID_X86 = n
 CONFIG_PLATFORM_JB_X86 = n
 CONFIG_PLATFORM_ARM_S3C2K4 = n
@@ -104,6 +104,7 @@ CONFIG_PLATFORM_ACTIONS_ATV5201 = n
 CONFIG_PLATFORM_ARM_RTD299X = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_8810 = n
+CONFIG_PLATFORM_NEW_ARM = y
 ###############################################################
 
 CONFIG_DRVEXT_MODULE = n
@@ -1234,6 +1235,14 @@ ifeq ($(CONFIG_SDIO_HCI), y)
 EXTRA_CFLAGS += -DCONFIG_PLATFORM_OPS
 _PLATFORM_FILES += platform/platform_sprd_sdio.o
 endif
+endif
+
+ifeq ($(CONFIG_PLATFORM_NEW_ARM), y)                                                                                   
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH := arm	
+CROSS_COMPILE := /opt/arm-none-linux-gcc-4.7.3-header-3.14.x-toolchain/bin/arm-none-linux-gnueabi- 
+KVER := 3.14.39   	
+KSRC ?= /home/share/bbb-new-kernel/trunk/output/build/linux-3.14.39
 endif
 
 ifeq ($(CONFIG_MULTIDRV), y)	

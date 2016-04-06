@@ -1239,10 +1239,12 @@ endif
 
 ifeq ($(CONFIG_PLATFORM_NEW_ARM), y)                                                                                   
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+EXTRA_CFLAGS += -DCONFIG_P2P_IPS
 ARCH := arm	
-CROSS_COMPILE := /opt/arm-none-linux-gcc-4.7.3-header-3.14.x-toolchain/bin/arm-none-linux-gnueabi- 
-KVER := 3.14.39   	
-KSRC ?= /home/share/bbb-new-kernel/trunk/output/build/linux-3.14.39
+CROSS_COMPILE := /opt/arm-none-linux-gcc-4.7.3-header-3.14.x-toolchain/bin/arm-none-linux-gnueabi-  	
+KSRC ?= /home/share/bbb-project/trunk/output/build/linux-3.8.13
 endif
 
 ifeq ($(CONFIG_MULTIDRV), y)	

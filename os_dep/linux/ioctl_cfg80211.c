@@ -833,7 +833,9 @@ void rtw_cfg80211_indicate_disconnect(_adapter *padapter)
 
 	if (!padapter->mlmepriv.not_indic_disco) {
 		DBG_8192C("pwdev->sme_state(b)=%d\n", pwdev->sme_state);
+#if (LINUX_VERSION_CODE > KERNEL_VERSION(3, 9, 0))
 
+#else
 		if(pwdev->sme_state==CFG80211_SME_CONNECTING)
 			cfg80211_connect_result(padapter->pnetdev, NULL, NULL, 0, NULL, 0, 
 				WLAN_STATUS_UNSPECIFIED_FAILURE, GFP_ATOMIC/*GFP_KERNEL*/);
@@ -841,7 +843,7 @@ void rtw_cfg80211_indicate_disconnect(_adapter *padapter)
 			cfg80211_disconnected(padapter->pnetdev, 0, NULL, 0, GFP_ATOMIC);
 		//else
 			//DBG_8192C("pwdev->sme_state=%d\n", pwdev->sme_state);
-
+#endif
 		DBG_8192C("pwdev->sme_state(a)=%d\n", pwdev->sme_state);
 	}
 }
@@ -5889,7 +5891,11 @@ static void rtw_cfg80211_preinit_wiphy(_adapter *padapter, struct wiphy *wiphy)
 #endif
 
 #if defined(CONFIG_PM) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0))
-	wiphy->wowlan = wowlan_stub;
+#if (LINUX_VERSION_CODE > KERNEL_VERSION(3, 9, 0))
+	wiphy->wowlan = &wowlan_stub;
+#else
+    wiphy->wowlan = wowlan_stub;
+#endif
 #endif
 
 #if defined(CONFIG_TDLS) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))

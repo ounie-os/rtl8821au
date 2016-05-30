@@ -117,7 +117,11 @@
 
 #define   KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 /* emulate a modern version */
+if (KERNEL_VERSION_CODE == 3.14.39)
+#define LINUX_VERSION_CODE KERNEL_VERSION(3, 14, 39)
+#else
 #define LINUX_VERSION_CODE KERNEL_VERSION(3, 8, 13)
+#endif
 
 #define WIRELESS_EXT -1
 #define HZ hz

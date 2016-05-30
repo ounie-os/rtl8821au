@@ -1242,10 +1242,6 @@ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
 EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 EXTRA_CFLAGS += -DCONFIG_P2P_IPS
-ARCH ?= arm	
-CROSS_COMPILE ?= /opt/arm-none-linux-gcc-4.7.3-header-3.14.x-toolchain/bin/arm-none-linux-gnueabi-  	
-KSRC ?= /home/share/bbb-project/trunk/output/build/linux-3.8.13
-INSTALL_MOD_PATH ?=
 endif
 
 ifeq ($(CONFIG_MULTIDRV), y)	
@@ -1332,7 +1328,7 @@ export CONFIG_RTL8821AU = m
 all: modules
 
 modules:
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd)  modules
+	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd) KERNEL_VERSION_CODE=$(KERNEL_VERSION_CODE) modules
 
 strip:
 	$(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded

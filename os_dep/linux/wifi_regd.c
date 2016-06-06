@@ -491,6 +491,7 @@ static int _rtw_regd_init_wiphy(struct rtw_regulatory *reg,
 	wiphy->flags |= BIT(0);
 	wiphy->flags &= ~BIT(1);
 	wiphy->flags &= ~BIT(2);    
+	wiphy->regulatory_flags |= BIT(0);
 #else
 	wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
 	wiphy->flags &= ~WIPHY_FLAG_STRICT_REGULATORY;

@@ -636,6 +636,11 @@ void rtw_cfg80211_ibss_indicate_connect(_adapter *padapter)
 	struct wlan_network  *cur_network = &(pmlmepriv->cur_network);
 	struct wireless_dev *pwdev = padapter->rtw_wdev;
 	struct cfg80211_bss *bss = NULL;
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0))
+	struct wiphy *wiphy = pwdev->wiphy;
+	int freq = (int)cur_network->network.Configuration.DSConfig;
+	struct ieee80211_channel *chan;
+#endif
 
 	DBG_871X(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 	if (pwdev->iftype != NL80211_IFTYPE_ADHOC) 
@@ -687,7 +692,12 @@ void rtw_cfg80211_ibss_indicate_connect(_adapter *padapter)
 			DBG_871X_LEVEL(_drv_always_, FUNC_ADPT_FMT" BSS not found !!\n", FUNC_ADPT_ARG(padapter));
 	}
 	//notify cfg80211 that device joined an IBSS
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0))
+	chan = ieee80211_get_channel(wiphy, freq);
+	cfg80211_ibss_joined(padapter->pnetdev, cur_network->network.MacAddress, chan, GFP_ATOMIC);
+#else
 	cfg80211_ibss_joined(padapter->pnetdev, cur_network->network.MacAddress, GFP_ATOMIC);
+#endif
 }
 
 void rtw_cfg80211_indicate_connect(_adapter *padapter)

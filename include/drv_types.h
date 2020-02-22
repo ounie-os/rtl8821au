@@ -111,6 +111,7 @@ typedef struct _ADAPTER _adapter, ADAPTER,*PADAPTER;
 #include <rtw_efuse.h>
 #include <rtw_version.h>
 #include <rtw_odm.h>
+#include <rtw_compat.h>
 
 #ifdef CONFIG_P2P
 #include <rtw_p2p.h>

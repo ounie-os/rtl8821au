@@ -7,6 +7,8 @@
 #ifndef __RTW_WIFI_REGD_H__
 #define __RTW_WIFI_REGD_H__
 
+#include <linux/version.h>
+
 struct country_code_to_enum_rd {
 	u16 countrycode;
 	const char *iso_name;
@@ -19,10 +21,21 @@ enum country_code_type_t {
 	COUNTRY_CODE_MAX
 }; 
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,9,0))
 int rtw_regd_init(_adapter *padapter,
 	int (*reg_notifier)(struct wiphy *wiphy,
 		struct regulatory_request *request));
+#else
+void rtw_regd_init(_adapter *padapter,
+	void (*reg_notifier)(struct wiphy *wiphy,
+		struct regulatory_request *request));
+#endif
+		
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,9,0))
 int rtw_reg_notifier(struct wiphy *wiphy, struct regulatory_request *request);
+#else
+void rtw_reg_notifier(struct wiphy *wiphy, struct regulatory_request *request);
+#endif
 
 
 #endif

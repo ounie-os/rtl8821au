@@ -3417,22 +3417,36 @@ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint f
 	DBG_871X(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
 #if defined(RTW_USE_CFG80211_STA_EVENT) || defined(COMPAT_KERNEL_RELEASE)
-	{
-		struct station_info sinfo;
+
 		u8 ie_offset;
 		if (GetFrameSubType(pmgmt_frame) == WIFI_ASSOCREQ)
 			ie_offset = _ASOCREQ_IE_OFFSET_;
 		else // WIFI_REASSOCREQ
 			ie_offset = _REASOCREQ_IE_OFFSET_;
 	
-		sinfo.filled = 0;
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(4,0,0))		
+	{
+		struct station_info sinfo;
 		sinfo.filled = STATION_INFO_ASSOC_REQ_IES;
-#endif
 		sinfo.assoc_req_ies = pmgmt_frame + WLAN_HDR_A3_LEN + ie_offset;
 		sinfo.assoc_req_ies_len = frame_len - WLAN_HDR_A3_LEN - ie_offset;
 		cfg80211_new_sta(ndev, GetAddr2Ptr(pmgmt_frame), &sinfo, GFP_ATOMIC);
 	}
+#else
+    {
+        struct station_info *sinfo;
+        sinfo = kzalloc(sizeof(*sinfo), GFP_KERNEL);
+        if (!sinfo)	
+        {
+            DBG_871X_LEVEL(_drv_always_, "rtw_cfg80211_indicate_sta_assoc - sinfo malloc fail\n");
+        	return;
+        }
+        sinfo->assoc_req_ies = pmgmt_frame + WLAN_HDR_A3_LEN + ie_offset;
+		sinfo->assoc_req_ies_len = frame_len - WLAN_HDR_A3_LEN - ie_offset;
+		cfg80211_new_sta(ndev, GetAddr2Ptr(pmgmt_frame), sinfo, GFP_ATOMIC);
+		kfree(sinfo);
+    }
+#endif
 #else /* defined(RTW_USE_CFG80211_STA_EVENT) */
 	channel = pmlmeext->cur_channel;
 	if (channel <= RTW_CH_MAX_2G_CHANNEL)
